@@ -1,0 +1,73 @@
+version: '3.8'
+
+services:
+  # Backend server that manages VMs and handles API requests
+  orchestration-server:
+    build:
+      context: .
+      dockerfile: Dockerfile.server
+    ports:
+      - "8000:8000"
+    environment:
+      - PORT=8000
+      - HOST=0.0.0.0
+      - DEBUG=True
+      - LOG_LEVEL=INFO
+      - SECRET_KEY=dev_secret_key
+      - VM_PROVIDER=docker
+      - VM_POOL_SIZE=2
+    volumes:
+      - ./src:/app/src
+    networks:
+      - agent-network
+
+  # Web UI for users
+  web-ui:
+    build:
+      context: .
+      dockerfile: Dockerfile.ui
+    ports:
+      - "3000:3000"
+    environment:
+      - API_URL=http://orchestration-server:8000
+    volumes:
+      - ./src/ui:/app/src
+    depends_on:
+      - orchestration-server
+    networks:
+      - agent-network
+
+  # Example VM running the agent (for development)
+  # In production, VMs would be dynamically created
+  dev-vm-1:
+    build:
+      context: .
+      dockerfile: Dockerfile.agent
+    environment:
+      - VM_ID=dev-vm-1
+      - SERVER_URL=ws://orchestration-server:8000/ws/vm
+    volumes:
+      - ./src:/app/src
+    depends_on:
+      - orchestration-server
+    networks:
+      - agent-network
+
+  # Second example VM for testing multiple sessions
+  dev-vm-2:
+    build:
+      context: .
+      dockerfile: Dockerfile.agent
+    environment:
+      - VM_ID=dev-vm-2
+      - SERVER_URL=ws://orchestration-server:8000/ws/vm
+    volumes:
+      - ./src:/app/src
+    depends_on:
+      - orchestration-server
+    networks:
+      - agent-network
+
+networks:
+  agent-network:
+    driver: bridge

@@ -1,0 +1,36 @@
+# Core dependencies
+fastapi==0.108.0
+uvicorn==0.24.0
+pydantic==2.5.2
+python-dotenv==1.0.0
+
+# LLM integrations
+openai==1.6.0
+anthropic==0.7.4
+
+# Terminal execution and browser automation
+playwright==1.40.0
+pexpect==4.9.0
+psutil==5.9.6
+
+# Web UI backend
+websockets==12.0
+jinja2==3.1.2
+aiofiles==23.2.1
+
+# Security and monitoring
+python-jose==3.3.0
+passlib==1.7.4
+bcrypt==4.1.1
+prometheus-client==0.19.0
+
+# Testing
+pytest==7.4.3
+pytest-asyncio==0.21.1
+httpx==0.25.2
+
+# Utilities
+tqdm==4.66.1
+rich==13.7.0
+pyyaml==6.0.1
+loguru==0.7.2
